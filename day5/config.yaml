@@ -1,0 +1,18 @@
+model:
+  name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  quant:
+    use_4bit: true
+    quant_type: "nf4"
+    dtype: "float16"
+
+retriever:
+  model: "infly/inf-retriever-v1-1.5b"
+  top_k: 5
+  window_size: 2
+
+data:
+  lecture_path: "data/LLM2024_day4.txt"
+  question: "LLMにおけるInference Time Scalingとは？"
+
+evaluation:
+  reference_answer: "「Inference Time Scaling」とは、推論時に計算量を増やしてモデルの性能を高める手法..."
