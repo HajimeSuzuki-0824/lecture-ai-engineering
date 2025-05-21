@@ -1,4 +1,4 @@
-name: Run RAG Experiment
+name: CI with Tests
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - 'config.yaml'
 
 jobs:
-  run-experiment:
+  test-and-run:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,15 +24,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Set environment variables
+    - name: Run model tests
       run: |
-        echo "HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}" >> $GITHUB_ENV
-        echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
-        echo "SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
+        python tests/test_model.py
 
-    - name: Run main script
-      run: python main.py
+    - name: Run main experiment
+      run: |
+        python main.py
 
     - name: Notify Slack
+      if: always()
       run: |
-        python -c "from notify import notify_slack; notify_slack('✅ Llama3 + RAG実験完了 (GitHub Actions)')"
+        python -c "from notify import notify_slack; notify_slack('✅ 実験とテストが完了しました')"
